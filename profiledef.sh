@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="archlinux-baseline"
+iso_name="tails1154linux-installer"
 iso_label="ARCH_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
 iso_publisher="Tails1154 Linux <http://tails1154.x10.mx/>"
 iso_application="Tails1154 Linux"
