@@ -80,7 +80,7 @@ kdialog --progressbar "Installing the base system" 0 --title "Tails1154 Linux Se
 pacstrap -K /mnt base linux linux-firmware vi vim nano
 killall kdialog_progress_helper
 kdialog --progressbar "Installing programs" 0 --title "Tails1154 Linux Setup"
-pacstrap /mnt  mkinitcpio mkinitcpio-archiso open-vm-tools openssh pv qemu-guest-agent syslinux virtualbox-guest-utils-nox plasma xorg-server xorg-xinit polkit nano vim vi kdialog firefox kde-applications flatpak vlc networkmanager man-db sudo pulseaudio sddm
+pacstrap /mnt  mkinitcpio mkinitcpio-archiso open-vm-tools openssh pv qemu-guest-agent syslinux virtualbox-guest-utils-nox plasma xorg-server xorg-xinit polkit nano vim vi kdialog firefox kde-applications flatpak vlc networkmanager man-db sudo pulseaudio sddm firefox
 killall kdialog_progress_helper
 TIMEZONE=$(kdialog --inputbox "Enter your timezone (eg America/Chicago)" --title "Tails1154 Linux Setup")
 USERNAME=$(kdialog --inputbox "Enter your desired username" --title "Tails1154 Linux Setup")
@@ -88,12 +88,12 @@ kdialog --progressbar "Setting up the system" 0 --title "Tails1154 Linux Setup"
 genfstab -U /mnt >> /mnt/etc/fstab
 PASS=$(kdialog --password "Enter your desired password" --title "Tails1154 Linux Setup")
 ROOTPASS=$(kdialog --password "Enter the desired root password" --title "Tails1154 Linux Setup"
-arch-chroot /mnt /bin/sh -c "ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime ; hwclock --systohc ; locale-gen ; echo 'LANG=en_US.UTF-8' > /etc/locale.conf ; echo 'tailslinux' > /etc/hostname ; mkinitcpio -P ; useradd -m -G wheel $USERNAME ; echo '$PASS' | passwd $USERNAME --stdin ; echo '$ROOTPASS' | passwd root --stdin ; echo '$USERNAME ALL=(ALL:ALL) ALL' > /etc/sudoers.d/user.conf ; systemctl enable sddm ; systemctl enable NetworkManager ; exit 0"
+arch-chroot /mnt /bin/sh -c "ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime ; hwclock --systohc ; locale-gen ; echo 'LANG=en_US.UTF-8' > /etc/locale.conf ; echo 'tailslinux' > /etc/hostname ; mkinitcpio -P ; useradd -m -G wheel $USERNAME ; echo '$PASS' | passwd $USERNAME --stdin ; echo '$ROOTPASS' | passwd root --stdin ; echo '$USERNAME ALL=(ALL:ALL) ALL' > /etc/sudoers.d/user.conf ; systemctl enable sddm ; systemctl enable NetworkManager ; echo 'Welcome to Tails1154 Linux!' > /etc/issue ; exit 0"
 killall kdialog_progress_helper
 fi
-kdialog --progressbar "Installing the grub package" 0 --title "Tails1154 Linux Setup"
-pacman -Sy grub efibootmgr --noconfirm # I know people will hate me doing this, but the packages cache is already out of date, and the ram most likely won't have enough space for upgrades if there are any.
-killall kdialog_progress_helper
+#kdialog --progressbar "Installing the grub package" 0 --title "Tails1154 Linux Setup"
+#pacman -Sy grub efibootmgr --noconfirm # I know people will hate me doing this, but the packages cache is already out of date, and the ram most likely won't have enough space for upgrades if there are any.
+#killall kdialog_progress_helper
 kdialog --progressbar "Adding pacman keys" 0 --title "Tails1154 Linux Setup"
 arch-chroot /mnt /bin/sh -c 'pacman -Sy arch-keyring --noconfirm ; pacman-key --init ; pacman-key --populate ; exit 0'
 killall kdialog_progress_helper
