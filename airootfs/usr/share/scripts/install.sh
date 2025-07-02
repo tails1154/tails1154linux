@@ -3,8 +3,13 @@
 
 kdialog --progressbar "Syncing the date and time" 0 --title "Tails1154 Linux Setup"
 timedatectl
-killall kdialog # idk how to use dbus lol. tell me how if you want
+killall kdialog_progress_helpers # idk how to use dbus lol. tell me how if you want
 
+
+kdialog --progressbar "Updating the keyring" 0 --title "Tails1154 Linux Setup"
+pacman -Sy archlinux-keyring
+pacman -Sy arch-keyring # I have no idea what its called lol
+killall kdialog_progress_helpers
 DISKS=$(fdisk -l)
 
 kdialog --msgbox "Disks: $DISKS" --title "Tails1154 Linux Setup"
@@ -57,15 +62,43 @@ kdialog --progressbar "Formatting partitions" 0 --title "Tails1154 Linux Setup"
 mkfs.fat -F32 "${DISK}$EFIBLOCKDEV"    # EFI (FAT32)
 mkswap "${DISK}$SWAPBLOCKDEV"           # Swap
 mkfs.ext4 "${DISK}$ROOTBLOCKDEV"        # Root (ext4)
-killall kdialog
+killall kdialog_progress_helpers
 kdialog --progressbar "Mounting partitions" 0 --title "Tails1154 Linux Setup"
 # Mount partitions
 mount "${DISK}3" /mnt
 mount --mkdir "${DISK}1" /mnt/boot
 swapon "${DISK}2"
-killall kdialog
+killall kdialog_progress_helpers
 
 
 
 
 kdialog --msgbox "That's all the info we need right now.\n\nAbout to setup base system." --title "Tails1154 Linux Setup"
+kdialog --progressbar "Installing the base system" 0 --title "Tails1154 Linux Setup"
+pacstrap -K /mnt base linux linux-firmware vi vim nano
+killall kdialog_progress_helpers
+kdialog --progressbar "Installing programs" 0 --title "Tails1154 Linux Setup"
+pacstrap /mnt  mkinitcpio mkinitcpio-archiso open-vm-tools openssh pv qemu-guest-agent syslinux virtualbox-guest-utils-nox plasma xorg-server xorg-xinit polkit nano vim vi kdialog firefox kde-applications flatpak vlc networkmanager man-db fsck sudo
+killall kdialog_progress_helpers
+TIMEZONE=$(kdialog --inputbox "Enter your timezone (eg America/Chicago)" --title "Tails1154 Linux Setup")
+USERNAME=$(kdialog --inputbox "Enter your desired username" --title "Tails1154 Linux Setup")
+kdialog --progressbar "Setting up the system" 0 --title "Tails1154 Linux Setup"
+genfstab -U /mnt >> /mnt/etc/fstab
+PASS=$(kdialog --password "Enter your desired password" --title "Tails1154 Linux Setup")
+arch-chroot /mnt /bin/sh -c 'ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime ; hwclock --systohc ; locale-gen ; echo "LANG=en_US.UTF-8" > /etc/locale.conf ; echo "tailslinux" > /etc/hostname ; mkinitcpio -P ; useradd -m -G wheel $USERNAME ; echo "$PASS" | passwd $USERNAME --stdin ; echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/user.conf ; exit 0'
+killall kdialog_progress_helpers
+kdialog --progressbar "Installing the grub package" 0 --title "Tails1154 Linux Setup"
+pacman -Sy grub efibootmgr # I know people will hate me doing this, but the packages cache is already out of date, and the ram most likely won't have enough space for upgrades if there are any.
+killall kdialog_progress_helpers
+kdialog --progressbar "Installing the grub bootloader" 0 --title "Tails1154 Linux Setup"
+grub-install $DISK --force
+killall kdialog_progress_helpers
+kdialog --progressbar "Unmounting file systems" 0 --title "Tails1154 Linux Setup"
+umount /mnt/boot
+umount /mnt
+killall kdialog_progress_helpers
+kdialog --msgbox "Tails1154 Linux Setup has completed! You may now reboot into your new system! (in theory)"
+kdialog --msgbox "Press OK or close this window to reboot."
+reboot now
+
+
