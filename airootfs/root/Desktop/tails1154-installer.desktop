@@ -1,10 +1,19 @@
 [Desktop Entry]
-Name=Tails1154 Installer
-Comment=Install Tails1154 Linux (Arch-based with Plasma)
-Exec=pkexec /usr/share/scripts/install.sh
-Icon=org.kde.ktorrent
-Terminal=true
-Type=Application
 Categories=System;Setup;
+Comment=Install Tails1154 Linux (Arch-based with Plasma)
+Comment=Install Tails1154 Linux (Arch-based with Plasma)
+Exec=/usr/share/scripts/install.sh
+GenericName=
+GenericName=
+Icon=org.kde.ktorrent
 Keywords=install;system;tails1154;
+MimeType=
+Name=Tails1154 Installer
+Name=Tails1154 Installer
+Path=
 StartupNotify=true
+Terminal=true
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
