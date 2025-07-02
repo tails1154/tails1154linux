@@ -87,7 +87,8 @@ USERNAME=$(kdialog --inputbox "Enter your desired username" --title "Tails1154 L
 kdialog --progressbar "Setting up the system" 0 --title "Tails1154 Linux Setup"
 genfstab -U /mnt >> /mnt/etc/fstab
 PASS=$(kdialog --password "Enter your desired password" --title "Tails1154 Linux Setup")
-arch-chroot /mnt /bin/sh -c "ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime ; hwclock --systohc ; locale-gen ; echo 'LANG=en_US.UTF-8' > /etc/locale.conf ; echo 'tailslinux' > /etc/hostname ; mkinitcpio -P ; useradd -m -G wheel $USERNAME ; echo '$PASS' | passwd $USERNAME --stdin ; echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/user.conf ; systemctl enable sddm ; exit 0"
+ROOTPASS=$(kdialog --password "Enter the desired root password" --title "Tails1154 Linux Setup"
+arch-chroot /mnt /bin/sh -c "ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime ; hwclock --systohc ; locale-gen ; echo 'LANG=en_US.UTF-8' > /etc/locale.conf ; echo 'tailslinux' > /etc/hostname ; mkinitcpio -P ; useradd -m -G wheel $USERNAME ; echo '$PASS' | passwd $USERNAME --stdin ; echo '$ROOTPASS' | passwd root --stdin ; echo '$USERNAME ALL=(ALL:ALL) ALL' > /etc/sudoers.d/user.conf ; systemctl enable sddm ; systemctl enable NetworkManager ; exit 0"
 killall kdialog_progress_helper
 fi
 kdialog --progressbar "Installing the grub package" 0 --title "Tails1154 Linux Setup"
